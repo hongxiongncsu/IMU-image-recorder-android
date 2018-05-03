@@ -1,0 +1,9 @@
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+Tools/frame-extractor/elab
+Tools/frame-extractor/frames
+Tools/frame-extractor/frames_info
