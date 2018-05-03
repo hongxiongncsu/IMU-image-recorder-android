@@ -66,7 +66,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     private TextView txt;
 
     int quality = 0;
-    int rate = 100;
+    int rate = 200;
     String timeStampFile;
     int clickFlag = 0;
     Timer timer;
@@ -136,9 +136,9 @@ public class MainActivity extends Activity implements SensorEventListener {
             mCamera = Camera.open(findBackFacingCamera());
             mPreview.refreshCamera(mCamera);
         }
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, head, SensorManager.SENSOR_DELAY_GAME);
-        sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, head, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_FASTEST);
         //sensorManager.registerListener(this, rotv, SensorManager.SENSOR_DELAY_NORMAL);
 
 
@@ -393,7 +393,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         String setTextText = "Heading: " + heading + " Speed: " + speed;
         tv.setText(setTextText);
         timer = new Timer();
-        timer.schedule(new SayHello(), 0, rate);
+        timer.schedule(new SayHello(), 0, 1000/rate);
         /*if(clickFlag == 1) {
             capture.performClick();
         }
@@ -511,10 +511,13 @@ public class MainActivity extends Activity implements SensorEventListener {
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String setting = new String();
-        if(rate == 100) {
+        if(rate == 200){
+            setting = "200 Hz";
+        }
+        else if(rate == 10){
             setting = "10 Hz";
         }
-        else if(rate == 67){
+        else if(rate == 15){
             setting = "15 Hz";
         }
         builder.setTitle("Pick Data Save Rate, Current setting: " + setting)
@@ -522,11 +525,14 @@ public class MainActivity extends Activity implements SensorEventListener {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
                         // of the selected item
-                        if(which == 0){
-                            rate = 67 ;
+                        if (which == 0){
+                            rate = 200;
+                        }
+                        else if(which == 0){
+                            rate = 10;
                         }
                         else if (which == 1){
-                            rate = 100;
+                            rate = 15;
                         }
                     }
                 });
