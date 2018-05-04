@@ -72,8 +72,8 @@ public class MainActivity extends Activity implements SensorEventListener {
     Timer timer;
     int VideoFrameRate = 24;
 
-    LocationListener locationListener;
-    LocationManager LM;
+    //LocationListener locationListener;
+    //LocationManager LM;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +81,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         myContext = this;
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         head = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         //rotv = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
@@ -102,7 +102,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         vid.setVisibility(View.GONE);
 
         tv = (TextView) findViewById(R.id.textViewHeading);
-        String setTextText = "Heading: " + heading + " Speed: " + speed;
+        String setTextText = "Heading: " + heading + " Speed: " + "NA";
         tv.setText(setTextText);
 
     }
@@ -142,7 +142,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         //sensorManager.registerListener(this, rotv, SensorManager.SENSOR_DELAY_NORMAL);
 
 
-
+        /*
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 // Called when a new location is found by the network location provider.
@@ -168,6 +168,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
         // Register the listener with the Location Manager to receive location updates
         LM.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        */
     }
 
     @Override
@@ -314,23 +315,23 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     /* --------------------- Data Section ----------------------------*/
 
-    Location location;
-    LocationManager lm;
-    double latitude = 0;
-    double longitude = 0;
+    //Location location;
+    //LocationManager lm;
+    //double latitude = 0;
+    //double longitude = 0;
 
-    double latitude_original = 0;
-    double longitude_original = 0;
+    //double latitude_original = 0;
+    //double longitude_original = 0;
     //float distance = 0;
-    float speed = 0;
-    float dist[] = {0,0,0};
+    //float speed = 0;
+    //float dist[] = {0,0,0};
     PrintWriter writer = null;
     long timechecker = 5000;
 
     class SayHello extends TimerTask {
         public void run() {
-            lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            //lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            //location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             //lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 0, locationListener );
             //longitude = location.getLongitude();
             //latitude = location.getLatitude();
@@ -346,7 +347,7 @@ public class MainActivity extends Activity implements SensorEventListener {
                 timer.cancel();
                 timer.purge();
             }*/
-
+            /*
             if(latitude != 0.0) {
                 String timeStamp = String.valueOf((new Date()).getTime());
                 writer.println(longitude + "," + latitude + "," + speed + "," + dist[0] + "," + timeStamp + "," + linear_acc_x + "," + linear_acc_y + "," + linear_acc_z + "," +
@@ -358,6 +359,10 @@ public class MainActivity extends Activity implements SensorEventListener {
                 writer.println(longitude_original + "," + latitude_original + "," + speed + "," + dist[0] + "," + timeStamp + "," + linear_acc_x + "," + linear_acc_y + "," + linear_acc_z + "," +
                         heading + "," + gyro_x + "," + gyro_y + "," + gyro_z);
                 }
+            */
+            String timeStamp = String.valueOf((new Date()).getTime());
+            writer.println(timeStamp + "," + acc_x + "," + acc_y + "," + acc_z + "," +
+                    heading + "," + gyro_x + "," + gyro_y + "," + gyro_z);
 
             /*
             String timeStamp = String.valueOf((new Date()).getTime());
@@ -377,20 +382,20 @@ public class MainActivity extends Activity implements SensorEventListener {
             e.printStackTrace();
         }
 
-        writer.println("Longitude" + "," + "Latitude" + "," + "Speed" + "," + "Distance" + "," + "Time" + "," + "Acc X" + "," + "Acc Y" + "," + "Acc Z" + "," + "Heading"
+        writer.println("Timestamp" + "," + "Acc X" + "," + "Acc Y" + "," + "Acc Z" + "," + "Heading"
                 + "," + "gyro_x" + "," + "gyro_y" + "," + "gyro_z");
         /*
         writer.println("Timestamp" + "," +
                        "Longitude" + "," + "Latitude" + "," +
                        "RotationV X" + "," + "RotationV Y" + "," + "RotationV Z" + "," + "RotationV W" + "," + "RotationV Acc");
         */
-        LocationManager original = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Location original_location = original.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if(original.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null){
-            latitude_original = original_location.getLatitude();
-            longitude_original = original_location.getLongitude();
-        }
-        String setTextText = "Heading: " + heading + " Speed: " + speed;
+        //LocationManager original = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        //Location original_location = original.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        //if(original.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null){
+        //    latitude_original = original_location.getLatitude();
+        //    longitude_original = original_location.getLongitude();
+        //}
+        String setTextText = "Heading: " + heading + " Speed: " + "NA";
         tv.setText(setTextText);
         timer = new Timer();
         timer.schedule(new SayHello(), 0, 1000/rate);
@@ -415,9 +420,9 @@ public class MainActivity extends Activity implements SensorEventListener {
     //private Sensor rotv;
 
 
-    float linear_acc_x = 0;
-    float linear_acc_y = 0;
-    float linear_acc_z = 0;
+    float acc_x = 0;
+    float acc_y = 0;
+    float acc_z = 0;
 
     float heading = 0;
 
@@ -449,10 +454,10 @@ public class MainActivity extends Activity implements SensorEventListener {
         }
         */
 
-        if(event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
-            linear_acc_x = event.values[0];
-            linear_acc_y = event.values[1];
-            linear_acc_z = event.values[2];
+        if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            acc_x = event.values[0];
+            acc_y = event.values[1];
+            acc_z = event.values[2];
         }
         else if (event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
             heading = Math.round(event.values[0]);
@@ -469,7 +474,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             gyro_y = event.values[1];
             gyro_z = event.values[2];
         }
-        String setTextText = "Heading: " + heading + " Speed: " + speed;
+        String setTextText = "Heading: " + heading + " Speed: " + "NA";
         tv.setText(setTextText);
     }
     String[] options = {"1080p","720p","480p"};
