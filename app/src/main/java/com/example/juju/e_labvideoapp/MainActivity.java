@@ -1,7 +1,9 @@
 package com.example.juju.e_labvideoapp;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
@@ -14,6 +16,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Sensor;
@@ -220,6 +227,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 */
             } else {
                 timeStampFile = String.valueOf((new Date()).getTime());
+                mPreview.timeStampFile = timeStampFile;
                 File wallpaperDirectory = new File(Environment.getExternalStorageDirectory().getPath()+"/elab/");
                 wallpaperDirectory.mkdirs();
 

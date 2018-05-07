@@ -5,17 +5,31 @@ import java.io.IOException;
 
 import android.content.Context;
 import android.hardware.Camera;
+import android.hardware.Camera.CameraInfo;
+import android.hardware.Camera.Size;
+import android.os.Environment;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.graphics.YuvImage;
+import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import java.io.ByteArrayOutputStream;
+import java.io.*;
+import java.util.Date;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
     private SurfaceHolder mHolder;
     private Camera mCamera;
+    public String timeStampFile;
 
     public CameraPreview(Context context, Camera camera) {
         super(context);
         mCamera = camera;
+        // Install a SurfaceHolder.Callback so we get notified when the underlying surface is created and destroyed.
         mHolder = getHolder();
         mHolder.addCallback(this);
         // deprecated setting, but required on Android versions prior to 3.0
@@ -51,6 +65,32 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         setCamera(camera);
         try {
             mCamera.setPreviewDisplay(mHolder);
+            mCamera.unlock();
+            mCamera.reconnect();
+            mCamera.setPreviewCallback(new Camera.PreviewCallback() {
+                @Override
+                public void onPreviewFrame(byte[] data, Camera camera) {
+                    // TODO Auto-generated method stub
+                    Camera.Parameters parameters = camera.getParameters();
+                    Size size = parameters.getPreviewSize();
+                    YuvImage yuvImage = new YuvImage(data, ImageFormat.NV21,
+                            size.width, size.height, null);
+                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+                    yuvImage.compressToJpeg(new Rect(0, 0, size.width, size.height), 100, os);
+                    byte[] jpegByteArray = os.toByteArray();
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(jpegByteArray, 0, jpegByteArray.length);
+                    String timeStamp = String.valueOf((new Date()).getTime());
+                    try {
+                        FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/elab/" + timeStampFile + "/" + timeStamp + ".png");
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Log.e("hxiong","SaveFileError");
+                    }
+
+                }
+            });
             mCamera.startPreview();
         } catch (Exception e) {
             Log.d(VIEW_LOG_TAG, "Error starting camera preview: " + e.getMessage());
