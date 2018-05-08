@@ -119,5 +119,6 @@
     <orderEntry type="library" name="Gradle: com.android.support:appcompat-v7-21.0.3" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-v4-21.0.3" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-annotations:21.0.3@jar" level="project" />
+    <orderEntry type="library" name="Gradle: commons-io:commons-io:2.4@jar" level="project" />
   </component>
 </module>

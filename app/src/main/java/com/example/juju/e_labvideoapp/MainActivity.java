@@ -60,6 +60,7 @@ import android.widget.EditText;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import android.util.Log;
 
 public class MainActivity extends Activity implements SensorEventListener {
     private Camera mCamera;
@@ -112,6 +113,9 @@ public class MainActivity extends Activity implements SensorEventListener {
         String setTextText = "Heading: " + heading + " Speed: " + "NA";
         tv.setText(setTextText);
 
+        // start recording IMU data
+        timeStampFile = String.valueOf((new Date()).getTime());
+        storeData();
     }
 
 
@@ -203,71 +207,48 @@ public class MainActivity extends Activity implements SensorEventListener {
     OnClickListener captureListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
+            Toast.makeText(MainActivity.this, "Video captured! Converting!", Toast.LENGTH_LONG).show();
+            enddata(); // stop IMU recording
+            sensorManager.unregisterListener(MainActivity.this);
 
-            if (recording) {
-                // stop recording and release camera
-                mediaRecorder.stop(); // stop the recording
-                releaseMediaRecorder(); // release the MediaRecorder object
-                Toast.makeText(MainActivity.this, "Video captured!", Toast.LENGTH_LONG).show();
-                recording = false;
-                //d.exportData();
-                chrono.stop();
-                chrono.setBase(SystemClock.elapsedRealtime());
-
-                chrono.start();
-                chrono.stop();
-                txt.setTextColor(-16711936);
-                //chrono.setBackgroundColor(0);
-                enddata();
-/*
-                if(clickFlag == 1){
-                    clickFlag = 0;
-                    capture.performClick();
+            File file = new File(Environment.getExternalStorageDirectory().getPath() + "/elab/" + "checkPreviewRate/png");
+            for(File child : file.listFiles()) {
+                byte[] data = null;
+                try {
+                    data = org.apache.commons.io.FileUtils.readFileToByteArray(child);
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
                 }
-*/
-            } else {
-                timeStampFile = String.valueOf((new Date()).getTime());
-                mPreview.timeStampFile = timeStampFile;
-                File wallpaperDirectory = new File(Environment.getExternalStorageDirectory().getPath()+"/elab/");
-                wallpaperDirectory.mkdirs();
+                Camera.Size size = mCamera.getParameters().getPreviewSize();
+                YuvImage yuvImage = new YuvImage(data, ImageFormat.NV21,
+                        size.width, size.height, null);
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                yuvImage.compressToJpeg(new Rect(0, 0, size.width, size.height), 100, os);
+                byte[] jpegByteArray = os.toByteArray();
+                Bitmap bitmap = BitmapFactory.decodeByteArray(jpegByteArray, 0, jpegByteArray.length);
 
-                File wallpaperDirectory1 = new File(Environment.getExternalStorageDirectory().getPath()+"/elab/"+timeStampFile);
-                wallpaperDirectory1.mkdirs();
-                if (!prepareMediaRecorder()) {
-                    Toast.makeText(MainActivity.this, "Fail in prepareMediaRecorder()!\n - Ended -", Toast.LENGTH_LONG).show();
-                    finish();
+
+                int index = child.getAbsolutePath().indexOf(".");
+                String fileName = child.getAbsolutePath().substring(0, index);
+                try {
+                    FileOutputStream fos = new FileOutputStream(new File(fileName + ".png"));
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                    fos.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                    Log.e("hxiong","SaveFileError");
                 }
-
-                // work on UiThread for better performance
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        try {
-                            mediaRecorder.start();
-                        } catch (final Exception ex) {
-                        }
-                    }
-                });
-                Toast.makeText(MainActivity.this, "Recording...", Toast.LENGTH_LONG).show();
-
-                Camera.Parameters params = mCamera.getParameters();
-                params.setPreviewFpsRange( 30000, 30000 ); // 30 fps
-                if ( params.isAutoExposureLockSupported() )
-                    params.setAutoExposureLock( true );
-
-                params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-                mCamera.setParameters(params);
-                //d.beginData();
-                storeData();
-                chrono.setBase(SystemClock.elapsedRealtime());
-
-                chrono.start();
-                //chrono.setBackgroundColor(-65536);
-                txt.setTextColor(-65536);
-                recording = true;
-
             }
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(1);
+
         }
     };
+
+
 
     private void releaseMediaRecorder() {
         if (mediaRecorder != null) {
@@ -383,7 +364,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     public void storeData() {
 
-        String filePath = Environment.getExternalStorageDirectory().getPath()+"/elab/" + timeStampFile + "/" + timeStampFile  +  ".csv";
+        File wallpaperDirectory = new File(Environment.getExternalStorageDirectory().getPath() + "/elab/" + "checkPreviewRate");
+        wallpaperDirectory.mkdirs();
+
+        String filePath = Environment.getExternalStorageDirectory().getPath()+"/elab/" + "checkPreviewRate" + "/" + timeStampFile  +  ".csv";
         try {
             writer = new PrintWriter(filePath);
         } catch (FileNotFoundException e) {

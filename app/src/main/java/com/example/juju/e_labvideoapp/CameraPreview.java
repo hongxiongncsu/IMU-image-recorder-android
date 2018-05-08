@@ -66,7 +66,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         setCamera(camera);
         try {
             Camera.Parameters parameters = camera.getParameters();
-            parameters.setPreviewFrameRate(60);
+            parameters.setPreviewFrameRate(24);
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
             //parameters.setPreviewSize(720, 480);
             //parameters.setPreviewFpsRange(24000,24000);
             mCamera.setParameters(parameters);
@@ -118,7 +119,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                         String timeStamp = String.valueOf((new Date()).getTime());
                         File wallpaperDirectory = new File(Environment.getExternalStorageDirectory().getPath() + "/elab/" + "checkPreviewRate");
                         wallpaperDirectory.mkdirs();
-                        FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/elab/" + "checkPreviewRate" + "/" + timeStamp + ".jpg");
+                        File wallpaperDirectory1 = new File(Environment.getExternalStorageDirectory().getPath() + "/elab/" + "checkPreviewRate/png");
+                        wallpaperDirectory1.mkdirs();
+                        FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/elab/" + "checkPreviewRate/png" + "/" + timeStamp + ".txt");
                         fos.write(data);
                         fos.close();
                     }catch (IOException e) {
