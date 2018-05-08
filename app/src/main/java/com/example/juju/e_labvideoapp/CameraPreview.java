@@ -17,6 +17,7 @@ import android.graphics.Rect;
 import java.io.ByteArrayOutputStream;
 import java.io.*;
 import java.util.Date;
+import java.util.List;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -64,15 +65,35 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         // start preview with new settings
         setCamera(camera);
         try {
+            Camera.Parameters parameters = camera.getParameters();
+            parameters.setPreviewFrameRate(60);
+            //parameters.setPreviewSize(720, 480);
+            //parameters.setPreviewFpsRange(24000,24000);
+            mCamera.setParameters(parameters);
             mCamera.setPreviewDisplay(mHolder);
-            mCamera.unlock();
-            mCamera.reconnect();
+            List<Camera.Size> tmp = parameters.getSupportedPreviewSizes();
             mCamera.setPreviewCallback(new Camera.PreviewCallback() {
                 @Override
                 public void onPreviewFrame(byte[] data, Camera camera) {
                     // TODO Auto-generated method stub
-                    Camera.Parameters parameters = camera.getParameters();
-                    Size size = parameters.getPreviewSize();
+                    Size size = camera.getParameters().getPreviewSize();
+                    /*
+                    YuvImage yuvImage = new YuvImage(data, ImageFormat.NV21,
+                            size.width, size.height, null);
+
+                    String timeStamp = String.valueOf((new Date()).getTime());
+                    try {
+                        File wallpaperDirectory = new File(Environment.getExternalStorageDirectory().getPath()+"/elab/"+"checkPreviewRate");
+                        wallpaperDirectory.mkdirs();
+                        FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/elab/" + "checkPreviewRate" + "/" + timeStamp + ".jpg");
+                        yuvImage.compressToJpeg(new Rect(0, 0, size.width, size.height), 100, fos);
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Log.e("hxiong","SaveFileError");
+                    }
+                    */
+                    /*
                     YuvImage yuvImage = new YuvImage(data, ImageFormat.NV21,
                             size.width, size.height, null);
                     ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -81,10 +102,26 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                     Bitmap bitmap = BitmapFactory.decodeByteArray(jpegByteArray, 0, jpegByteArray.length);
                     String timeStamp = String.valueOf((new Date()).getTime());
                     try {
-                        FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/elab/" + timeStampFile + "/" + timeStamp + ".png");
+                        //FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/elab/" + timeStampFile + "/" + timeStamp + ".png");
+                        File wallpaperDirectory = new File(Environment.getExternalStorageDirectory().getPath()+"/elab/"+"checkPreviewRate");
+                        wallpaperDirectory.mkdirs();
+                        FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/elab/" + "checkPreviewRate" + "/" + timeStamp + ".png");
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
                         fos.close();
                     } catch (IOException e) {
+                        e.printStackTrace();
+                        Log.e("hxiong","SaveFileError");
+                    }
+                    */
+
+                    try {
+                        String timeStamp = String.valueOf((new Date()).getTime());
+                        File wallpaperDirectory = new File(Environment.getExternalStorageDirectory().getPath() + "/elab/" + "checkPreviewRate");
+                        wallpaperDirectory.mkdirs();
+                        FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/elab/" + "checkPreviewRate" + "/" + timeStamp + ".jpg");
+                        fos.write(data);
+                        fos.close();
+                    }catch (IOException e) {
                         e.printStackTrace();
                         Log.e("hxiong","SaveFileError");
                     }

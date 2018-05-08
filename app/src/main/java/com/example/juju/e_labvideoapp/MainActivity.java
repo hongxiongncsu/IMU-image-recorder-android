@@ -72,7 +72,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     private TextView tv;
     private TextView txt;
 
-    int quality = 0;
+    int quality = 1;
     int rate = 200;
     String timeStampFile;
     int clickFlag = 0;
