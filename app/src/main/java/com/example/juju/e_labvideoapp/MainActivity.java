@@ -114,7 +114,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         tv.setText(setTextText);
 
         // start recording IMU data
-        timeStampFile = String.valueOf((new Date()).getTime());
+        timeStampFile = String.valueOf(System.nanoTime());;
         storeData();
     }
 
@@ -349,9 +349,9 @@ public class MainActivity extends Activity implements SensorEventListener {
                         heading + "," + gyro_x + "," + gyro_y + "," + gyro_z);
                 }
             */
-            String timeStamp = String.valueOf((new Date()).getTime());
-            writer.println(timeStamp + "," + acc_x + "," + acc_y + "," + acc_z + "," +
-                    heading + "," + gyro_x + "," + gyro_y + "," + gyro_z);
+            //String timeStamp = String.valueOf((new Date()).getTime());
+            String timeStamp = String.valueOf(System.nanoTime());
+            writer.println(timeStamp + "," + gyro_x + "," + gyro_y + "," + gyro_z + "," + acc_x + "," + acc_y + "," + acc_z);
 
             /*
             String timeStamp = String.valueOf((new Date()).getTime());
@@ -374,8 +374,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             e.printStackTrace();
         }
 
-        writer.println("Timestamp" + "," + "Acc X" + "," + "Acc Y" + "," + "Acc Z" + "," + "Heading"
-                + "," + "gyro_x" + "," + "gyro_y" + "," + "gyro_z");
+        writer.println("timestamp" + "," + "omega_x" + "," + "omega_y" + "," + "omega_z" + ","  + "alpha_x" + "," + "alpha_y" + "," + "alpha_z");
         /*
         writer.println("Timestamp" + "," +
                        "Longitude" + "," + "Latitude" + "," +

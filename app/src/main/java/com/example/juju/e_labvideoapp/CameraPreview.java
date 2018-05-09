@@ -116,7 +116,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                     */
 
                     try {
-                        String timeStamp = String.valueOf((new Date()).getTime());
+                        String timeStamp = String.valueOf(System.nanoTime());
                         File wallpaperDirectory = new File(Environment.getExternalStorageDirectory().getPath() + "/elab/" + "checkPreviewRate");
                         wallpaperDirectory.mkdirs();
                         File wallpaperDirectory1 = new File(Environment.getExternalStorageDirectory().getPath() + "/elab/" + "checkPreviewRate/png");

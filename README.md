@@ -1,4 +1,4 @@
-# VideoSensors
+# IMU-image-recorder
 
 
 App that records video and motion data from an android smartphone simultaneously. 
