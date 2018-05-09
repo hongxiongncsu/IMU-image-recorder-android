@@ -211,36 +211,9 @@ public class MainActivity extends Activity implements SensorEventListener {
             enddata(); // stop IMU recording
             sensorManager.unregisterListener(MainActivity.this);
 
-            File file = new File(Environment.getExternalStorageDirectory().getPath() + "/elab/" + "checkPreviewRate/png");
-            for(File child : file.listFiles()) {
-                byte[] data = null;
-                try {
-                    data = org.apache.commons.io.FileUtils.readFileToByteArray(child);
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                Camera.Size size = mCamera.getParameters().getPreviewSize();
-                YuvImage yuvImage = new YuvImage(data, ImageFormat.NV21,
-                        size.width, size.height, null);
-                ByteArrayOutputStream os = new ByteArrayOutputStream();
-                yuvImage.compressToJpeg(new Rect(0, 0, size.width, size.height), 100, os);
-                byte[] jpegByteArray = os.toByteArray();
-                Bitmap bitmap = BitmapFactory.decodeByteArray(jpegByteArray, 0, jpegByteArray.length);
+            // off-line process converting byte array to PNG
+            converterByteToPNG();
 
-
-                int index = child.getAbsolutePath().indexOf(".");
-                String fileName = child.getAbsolutePath().substring(0, index);
-                try {
-                    FileOutputStream fos = new FileOutputStream(new File(fileName + ".png"));
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                    fos.close();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                    Log.e("hxiong","SaveFileError");
-                }
-            }
             moveTaskToBack(true);
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(1);
@@ -248,6 +221,38 @@ public class MainActivity extends Activity implements SensorEventListener {
         }
     };
 
+    private void converterByteToPNG() {
+        File file = new File(Environment.getExternalStorageDirectory().getPath() + "/elab/" + "checkPreviewRate/png");
+        for(File child : file.listFiles()) {
+            byte[] data = null;
+            try {
+                data = org.apache.commons.io.FileUtils.readFileToByteArray(child);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            Camera.Size size = mCamera.getParameters().getPreviewSize();
+            YuvImage yuvImage = new YuvImage(data, ImageFormat.NV21,
+                    size.width, size.height, null);
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            yuvImage.compressToJpeg(new Rect(0, 0, size.width, size.height), 100, os);
+            byte[] jpegByteArray = os.toByteArray();
+            Bitmap bitmap = BitmapFactory.decodeByteArray(jpegByteArray, 0, jpegByteArray.length);
+
+
+            int index = child.getAbsolutePath().indexOf(".");
+            String fileName = child.getAbsolutePath().substring(0, index);
+            try {
+                FileOutputStream fos = new FileOutputStream(new File(fileName + ".png"));
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                fos.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                Log.e("hxiong","SaveFileError");
+            }
+        }
+    }
 
 
     private void releaseMediaRecorder() {

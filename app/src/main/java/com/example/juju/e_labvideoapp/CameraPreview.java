@@ -67,33 +67,47 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         try {
             Camera.Parameters parameters = camera.getParameters();
             parameters.setPreviewFrameRate(24);
+            List<int[]> tmp = parameters.getSupportedPreviewFpsRange();
             parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
             //parameters.setPreviewSize(720, 480);
             //parameters.setPreviewFpsRange(24000,24000);
             mCamera.setParameters(parameters);
             mCamera.setPreviewDisplay(mHolder);
-            List<Camera.Size> tmp = parameters.getSupportedPreviewSizes();
+            //List<Camera.Size> tmp = parameters.getSupportedPreviewSizes();
             mCamera.setPreviewCallback(new Camera.PreviewCallback() {
                 @Override
                 public void onPreviewFrame(byte[] data, Camera camera) {
                     // TODO Auto-generated method stub
                     Size size = camera.getParameters().getPreviewSize();
-                    /*
+
                     YuvImage yuvImage = new YuvImage(data, ImageFormat.NV21,
                             size.width, size.height, null);
 
-                    String timeStamp = String.valueOf((new Date()).getTime());
+                    String timeStamp = String.valueOf(System.nanoTime());
                     try {
-                        File wallpaperDirectory = new File(Environment.getExternalStorageDirectory().getPath()+"/elab/"+"checkPreviewRate");
+                        File wallpaperDirectory = new File(Environment.getExternalStorageDirectory().getPath()+"/elab/"+"checkPreviewRate/png");
                         wallpaperDirectory.mkdirs();
-                        FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/elab/" + "checkPreviewRate" + "/" + timeStamp + ".jpg");
+                        FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/elab/" + "checkPreviewRate/png" + "/" + timeStamp + ".jpg");
+                        yuvImage.compressToJpeg(new Rect(0, 0, size.width, size.height), 100, fos);
+                        yuvImage.compressToJpeg(new Rect(0, 0, size.width, size.height), 100, fos);
+                        yuvImage.compressToJpeg(new Rect(0, 0, size.width, size.height), 100, fos);
                         yuvImage.compressToJpeg(new Rect(0, 0, size.width, size.height), 100, fos);
                         fos.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                         Log.e("hxiong","SaveFileError");
                     }
-                    */
+
+                    try{
+                        FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/elab/" + "checkPreviewRate/png" + "/" + timeStamp + ".txt");
+                        fos.write(data);
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Log.e("hxiong","SaveFileError");
+                    }
+
+
                     /*
                     YuvImage yuvImage = new YuvImage(data, ImageFormat.NV21,
                             size.width, size.height, null);
@@ -101,7 +115,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                     yuvImage.compressToJpeg(new Rect(0, 0, size.width, size.height), 100, os);
                     byte[] jpegByteArray = os.toByteArray();
                     Bitmap bitmap = BitmapFactory.decodeByteArray(jpegByteArray, 0, jpegByteArray.length);
-                    String timeStamp = String.valueOf((new Date()).getTime());
+                    String timeStamp = String.valueOf(System.nanoTime());
                     try {
                         //FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/elab/" + timeStampFile + "/" + timeStamp + ".png");
                         File wallpaperDirectory = new File(Environment.getExternalStorageDirectory().getPath()+"/elab/"+"checkPreviewRate");
@@ -114,7 +128,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                         Log.e("hxiong","SaveFileError");
                     }
                     */
-
+                    /*
                     try {
                         String timeStamp = String.valueOf(System.nanoTime());
                         File wallpaperDirectory = new File(Environment.getExternalStorageDirectory().getPath() + "/elab/" + "checkPreviewRate");
@@ -128,7 +142,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                         e.printStackTrace();
                         Log.e("hxiong","SaveFileError");
                     }
-
+                    */
                 }
             });
             mCamera.startPreview();
