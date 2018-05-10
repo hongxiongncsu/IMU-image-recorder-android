@@ -67,7 +67,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         try {
             Camera.Parameters parameters = camera.getParameters();
             parameters.setPreviewFrameRate(24);
-            List<int[]> tmp = parameters.getSupportedPreviewFpsRange();
+            //List<int[]> tmp = parameters.getSupportedPreviewFpsRange();
+            mCamera.getParameters().flatten();
             parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
             //parameters.setPreviewSize(720, 480);
             //parameters.setPreviewFpsRange(24000,24000);
