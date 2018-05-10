@@ -68,7 +68,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             Camera.Parameters parameters = camera.getParameters();
             parameters.setPreviewFrameRate(24);
             //List<int[]> tmp = parameters.getSupportedPreviewFpsRange();
-            mCamera.getParameters().flatten();
+            //mCamera.getParameters().flatten();
             parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
             //parameters.setPreviewSize(720, 480);
             //parameters.setPreviewFpsRange(24000,24000);
@@ -80,7 +80,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 public void onPreviewFrame(byte[] data, Camera camera) {
                     // TODO Auto-generated method stub
                     Size size = camera.getParameters().getPreviewSize();
-
+                    /*
                     YuvImage yuvImage = new YuvImage(data, ImageFormat.NV21,
                             size.width, size.height, null);
 
@@ -107,7 +107,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                         e.printStackTrace();
                         Log.e("hxiong","SaveFileError");
                     }
-
+                    */
 
                     /*
                     YuvImage yuvImage = new YuvImage(data, ImageFormat.NV21,
@@ -129,7 +129,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                         Log.e("hxiong","SaveFileError");
                     }
                     */
-                    /*
                     try {
                         String timeStamp = String.valueOf(System.nanoTime());
                         File wallpaperDirectory = new File(Environment.getExternalStorageDirectory().getPath() + "/elab/" + "checkPreviewRate");
@@ -141,9 +140,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                         fos.close();
                     }catch (IOException e) {
                         e.printStackTrace();
-                        Log.e("hxiong","SaveFileError");
+                        Log.e("hxiong", "SaveFileError");
                     }
-                    */
                 }
             });
             mCamera.startPreview();
