@@ -48,7 +48,3 @@ At the moment it records the following data,
  - Make desired changes and click on the 'play' button or 'run' from the toolbar. 
 
 
-
-### License
-
-MIT
